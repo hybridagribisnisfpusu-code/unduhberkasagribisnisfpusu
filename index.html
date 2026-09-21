@@ -12,12 +12,12 @@
                 extend: {
                     colors: {
                         usu: {
-                            dark: '#043e30',      // Hijau tua header/sidebar
-                            main: '#064e3b',      // Hijau elemen utama
-                            hover: '#08634c',     // Hijau hover
-                            active: '#0b7258',    // Hijau menu aktif
-                            yellow: '#f59e0b',    // Kuning emas khas USU
-                            accent: '#10b981',    // Aksen hijau terang
+                            dark: '#043e30',
+                            main: '#064e3b',
+                            hover: '#08634c',
+                            active: '#0b7258',
+                            yellow: '#f59e0b',
+                            accent: '#10b981',
                         }
                     }
                 }
@@ -138,15 +138,15 @@
             <div id="adminNotice" class="hidden bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center justify-between text-emerald-900 text-xs sm:text-sm shadow-sm">
                 <div class="flex items-center space-x-2.5">
                     <svg class="w-5 h-5 text-usu-main flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    <span><strong>Mode Staf/Admin Aktif:</strong> Anda dapat mengunggah berkas baru yang langsung tersimpan di Google Sheets & Drive.</span>
+                    <span><strong>Mode Staf/Admin Aktif:</strong> Anda dapat mengunggah berkas baru ke database.</span>
                 </div>
                 <button onclick="logoutAdmin()" class="text-rose-600 hover:underline font-bold ml-2">Keluar Mode Admin</button>
             </div>
 
-            <!-- Loading Indicator -->
+            <!-- Loading State -->
             <div id="loadingState" class="text-center py-12">
-                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-usu-main border-t-transparent"></div>
-                <p class="text-xs text-slate-500 mt-2 font-medium">Sedang memuat berkas terbaru...</p>
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-usu-main border-t-transparent mb-2"></div>
+                <p class="text-sm font-semibold text-slate-600">Memuat data berkas terbaru dari database...</p>
             </div>
 
             <!-- Document Grid -->
@@ -158,7 +158,7 @@
             <div id="emptyState" class="hidden text-center py-12 bg-white rounded-2xl border border-dashed border-slate-300 p-8">
                 <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                 <h3 class="text-base font-semibold text-slate-800">Tidak ada berkas ditemukan</h3>
-                <p class="text-xs text-slate-500 mt-1">Belum ada berkas di database atau coba sesuaikan kata kunci pencarian Anda.</p>
+                <p class="text-xs text-slate-500 mt-1">Belum ada berkas tersimpan atau coba ubah kata kunci pencarian.</p>
             </div>
         </section>
     </main>
@@ -212,8 +212,6 @@
             </div>
             
             <form id="documentForm" onsubmit="handleFormSubmit(event)" class="p-6 space-y-4">
-                <input type="hidden" id="editDocId" value="">
-
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Judul Dokumen / Form *</label>
                     <input type="text" id="docTitle" required placeholder="Contoh: Template Undangan Seminar Proposal" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-sm focus:ring-2 focus:ring-usu-main outline-none">
@@ -245,28 +243,9 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Ukuran File (MB/KB)</label>
-                    <input type="text" id="docSize" placeholder="Contoh: 145 KB atau 1.2 MB" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-sm focus:ring-2 focus:ring-usu-main outline-none">
-                </div>
-
-                <!-- File Input -->
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Pilih File Berkas</label>
-                    <div class="mt-1 flex justify-center px-6 pt-4 pb-4 border-2 border-slate-300 border-dashed rounded-xl hover:border-usu-main transition bg-slate-50">
-                        <div class="space-y-1 text-center">
-                            <svg class="mx-auto h-8 w-8 text-usu-main" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                                <path d="M28 8H12a4 4 0 00-4 4v20a4 4 0 004 4h24a4 4 0 004-4V20L28 8z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                            <div class="flex text-xs text-slate-600 justify-center">
-                                <label for="fileUploadInput" class="relative cursor-pointer bg-white rounded-md font-bold text-usu-main hover:underline">
-                                    <span>Pilih file lokal</span>
-                                    <input id="fileUploadInput" name="fileUploadInput" type="file" class="sr-only" onchange="handleFileSelect(event)">
-                                </label>
-                                <p class="pl-1">atau tarik ke sini</p>
-                            </div>
-                            <p id="fileNameDisplay" class="text-xs text-slate-500 italic">Format support: .docx, .pdf, .xlsx</p>
-                        </div>
-                    </div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Pilih File Berkas *</label>
+                    <input id="fileUploadInput" required type="file" onchange="handleFileSelect(event)" class="w-full text-xs text-slate-500 border border-slate-300 rounded-xl p-2 bg-slate-50">
+                    <p id="fileNameDisplay" class="text-xs text-slate-500 italic mt-1">Format support: .docx, .pdf, .xlsx</p>
                 </div>
 
                 <div class="flex items-center justify-end space-x-3 pt-3 border-t border-slate-100">
@@ -280,9 +259,8 @@
     <div id="toastContainer" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
 
     <script>
-        // URL APPS SCRIPT AKTIF
+        // URL Google Apps Script yang kamu berikan
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxbUq3KSUV1OlDnKgKBSIEbgIQX63zeLkXghBgHcv_4mmxs4PnnQNbOhGG6890Aj9YO/exec";
-        
         const ADMIN_PASSWORD = "@adminagb";
 
         let selectedFileBase64 = null;
@@ -292,50 +270,36 @@
         let isAdmin = false;
 
         window.onload = function() {
-            fetchDocumentsFromDatabase();
+            fetchDocumentsOnline();
         };
 
-        async function fetchDocumentsFromDatabase() {
-            const loadingState = document.getElementById('loadingState');
+        // Ambil Data dari Google Apps Script
+        async function fetchDocumentsOnline() {
+            const loading = document.getElementById('loadingState');
             const grid = document.getElementById('documentGrid');
-            loadingState.classList.remove('hidden');
-            grid.classList.add('hidden');
-
             try {
                 const response = await fetch(GOOGLE_SCRIPT_URL);
-                const result = await response.json();
-                
-                if (result.status === 'success' && Array.isArray(result.data)) {
-                    documents = result.data;
-                } else {
-                    documents = [];
-                }
+                const data = await response.json();
+                documents = Array.isArray(data) ? data : [];
             } catch (e) {
-                console.error('Error memuat data:', e);
-                showToast('Gagal memuat data dari database', 'danger');
+                console.error("Gagal mengambil data dari Google Apps Script:", e);
                 documents = [];
             } finally {
-                loadingState.classList.add('hidden');
+                loading.classList.add('hidden');
                 grid.classList.remove('hidden');
                 renderDocuments();
             }
         }
 
         function handleAdminToggle() {
-            if (isAdmin) {
-                logoutAdmin();
-            } else {
-                openAuthModal();
-            }
+            if (isAdmin) logoutAdmin();
+            else openAuthModal();
         }
 
         function openAuthModal() {
             document.getElementById('adminPasswordInput').value = '';
             document.getElementById('authErrorMessage').classList.add('hidden');
             document.getElementById('adminAuthModal').classList.remove('hidden');
-            setTimeout(() => {
-                document.getElementById('adminPasswordInput').focus();
-            }, 100);
         }
 
         function closeAuthModal() {
@@ -344,16 +308,13 @@
 
         function verifyAdminPassword(e) {
             e.preventDefault();
-            const inputPassword = document.getElementById('adminPasswordInput').value;
-            const errorMsg = document.getElementById('authErrorMessage');
-
-            if (inputPassword === ADMIN_PASSWORD) {
+            if (document.getElementById('adminPasswordInput').value === ADMIN_PASSWORD) {
                 isAdmin = true;
                 closeAuthModal();
                 updateAdminStateUI();
                 showToast('Login Admin Berhasil!', 'success');
             } else {
-                errorMsg.classList.remove('hidden');
+                document.getElementById('authErrorMessage').classList.remove('hidden');
             }
         }
 
@@ -364,46 +325,31 @@
         }
 
         function updateAdminStateUI() {
-            const btnText = document.getElementById('adminBtnText');
-            const adminNotice = document.getElementById('adminNotice');
-            const uploadBtn = document.getElementById('uploadNewBtn');
-
-            if (isAdmin) {
-                btnText.textContent = 'Mode Mahasiswa (Keluar)';
-                adminNotice.classList.remove('hidden');
-                uploadBtn.classList.remove('hidden');
-            } else {
-                btnText.textContent = 'Admin Program Studi';
-                adminNotice.classList.add('hidden');
-                uploadBtn.classList.add('hidden');
-            }
-
+            document.getElementById('adminBtnText').textContent = isAdmin ? 'Mode Mahasiswa (Keluar)' : 'Admin Program Studi';
+            document.getElementById('adminNotice').classList.toggle('hidden', !isAdmin);
+            document.getElementById('uploadNewBtn').classList.toggle('hidden', !isAdmin);
             renderDocuments();
         }
 
         function setCategory(category) {
             currentCategory = category;
-            
             document.querySelectorAll('.category-btn').forEach(btn => {
-                if (btn.getAttribute('data-category') === category) {
-                    btn.className = 'category-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-150 bg-usu-main text-white shadow-sm whitespace-nowrap';
-                } else {
-                    btn.className = 'category-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-emerald-50 transition-all duration-150 whitespace-nowrap';
-                }
+                btn.className = btn.getAttribute('data-category') === category 
+                    ? 'category-btn px-4 py-2 rounded-xl text-sm font-semibold bg-usu-main text-white shadow-sm whitespace-nowrap'
+                    : 'category-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-emerald-50 whitespace-nowrap';
             });
-
             filterDocuments();
         }
 
         function filterDocuments() {
-            const searchKeyword = document.getElementById('searchInput').value.toLowerCase().trim();
-            const selectedFormat = document.getElementById('formatFilter').value;
+            const keyword = document.getElementById('searchInput').value.toLowerCase().trim();
+            const format = document.getElementById('formatFilter').value;
 
             const filtered = documents.filter(doc => {
                 const matchCategory = (currentCategory === 'all') || (doc.category === currentCategory);
-                const matchFormat = (selectedFormat === 'all') || (doc.format === selectedFormat);
-                const matchSearch = (doc.title || '').toLowerCase().includes(searchKeyword) || 
-                                    (doc.description || '').toLowerCase().includes(searchKeyword);
+                const matchFormat = (format === 'all') || (doc.format === format);
+                const matchSearch = (doc.title && doc.title.toLowerCase().includes(keyword)) || 
+                                    (doc.description && doc.description.toLowerCase().includes(keyword));
 
                 return matchCategory && matchFormat && matchSearch;
             });
@@ -418,10 +364,9 @@
         function renderGrid(docsToRender) {
             const grid = document.getElementById('documentGrid');
             const emptyState = document.getElementById('emptyState');
-
             grid.innerHTML = '';
 
-            if (!docsToRender || docsToRender.length === 0) {
+            if (docsToRender.length === 0) {
                 emptyState.classList.remove('hidden');
                 return;
             } else {
@@ -430,91 +375,50 @@
 
             docsToRender.forEach(doc => {
                 const card = document.createElement('div');
-                card.className = 'bg-white rounded-2xl border border-slate-200/90 p-5 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between group hover:border-emerald-300';
+                card.className = 'bg-white rounded-2xl border border-slate-200/90 p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between';
 
-                const categoryBadge = getCategoryBadge(doc.category);
                 const formatIcon = getFormatIcon(doc.format);
 
                 card.innerHTML = `
                     <div class="space-y-3">
                         <div class="flex items-start justify-between gap-2">
-                            <div class="p-2.5 rounded-xl ${formatIcon.bgColor} ${formatIcon.textColor} transition group-hover:scale-105">
+                            <div class="p-2.5 rounded-xl ${formatIcon.bgColor} ${formatIcon.textColor}">
                                 ${formatIcon.svg}
                             </div>
-                            <div class="flex items-center space-x-2">
-                                ${categoryBadge}
-                            </div>
+                            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-usu-main border border-emerald-300 uppercase">${escapeHtml(doc.category || 'umum')}</span>
                         </div>
-
                         <div>
-                            <h3 class="font-bold text-slate-900 group-hover:text-usu-main transition-colors line-clamp-2">${escapeHtml(doc.title || '')}</h3>
-                            <p class="text-xs text-slate-500 mt-1.5 line-clamp-2 leading-relaxed">${escapeHtml(doc.description || 'Tidak ada deskripsi berkas.')}</p>
+                            <h3 class="font-bold text-slate-900">${escapeHtml(doc.title)}</h3>
+                            <p class="text-xs text-slate-500 mt-1.5 leading-relaxed line-clamp-2">${escapeHtml(doc.description || 'Tidak ada deskripsi.')}</p>
                         </div>
                     </div>
-
                     <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between">
                         <div class="text-[11px] text-slate-400 font-medium">
-                            <span>${doc.format} • ${doc.size || '150 KB'}</span>
-                            <div class="text-[10px] text-slate-400">Tgl: ${doc.updatedAt || 'Terbaru'}</div>
+                            <span>${doc.format || 'DOCX'} • ${doc.size || '-'}</span>
                         </div>
-
-                        <button onclick="downloadFile('${escapeHtml(doc.title)}', '${doc.format}', '${doc.driveUrl || ''}')" class="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 text-usu-main hover:bg-usu-main hover:text-white transition-all duration-150">
+                        <button onclick="downloadFile('${doc.driveUrl}')" class="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 text-usu-main hover:bg-usu-main hover:text-white transition">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                             <span>Unduh</span>
                         </button>
                     </div>
                 `;
-
                 grid.appendChild(card);
             });
         }
 
-        function getCategoryBadge(cat) {
-            switch(cat) {
-                case 'sempro':
-                    return `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-usu-main border border-emerald-300">Sempro</span>`;
-                case 'semhas':
-                    return `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-teal-100 text-teal-800 border border-teal-300">Semhas</span>`;
-                case 'sidang':
-                    return `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300">Sidang</span>`;
-                default:
-                    return `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-600 border border-slate-200">Panduan</span>`;
-            }
-        }
-
         function getFormatIcon(format) {
-            if (format === 'DOCX') {
-                return {
-                    bgColor: 'bg-emerald-100',
-                    textColor: 'text-usu-main',
-                    svg: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 01-2-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>`
-                };
-            } else if (format === 'PDF') {
-                return {
-                    bgColor: 'bg-rose-100',
-                    textColor: 'text-rose-600',
-                    svg: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>`
-                };
-            } else {
-                return {
-                    bgColor: 'bg-amber-100',
-                    textColor: 'text-amber-700',
-                    svg: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>`
-                };
+            if (format === 'PDF') {
+                return { bgColor: 'bg-rose-100', textColor: 'text-rose-600', svg: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>` };
+            } else if (format === 'XLSX') {
+                return { bgColor: 'bg-amber-100', textColor: 'text-amber-700', svg: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>` };
             }
+            return { bgColor: 'bg-emerald-100', textColor: 'text-usu-main', svg: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>` };
         }
 
         function openUploadModal() {
-            if (!isAdmin) {
-                openAuthModal();
-                return;
-            }
-            document.getElementById('modalTitle').textContent = 'Unggah Berkas Dokumen Baru';
-            document.getElementById('editDocId').value = '';
+            if (!isAdmin) return openAuthModal();
             document.getElementById('documentForm').reset();
-            document.getElementById('fileNameDisplay').textContent = 'Format support: .docx, .pdf, .xlsx';
             selectedFileBase64 = null;
-            selectedFileMeta = null;
             document.getElementById('uploadModal').classList.remove('hidden');
         }
 
@@ -522,25 +426,21 @@
             document.getElementById('uploadModal').classList.add('hidden');
         }
 
-        function handleFileSelect(event) {
-            const file = event.target.files[0];
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
             if (file) {
-                document.getElementById('fileNameDisplay').textContent = `Terpilih: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
-                
-                const sizeKB = (file.size / 1024).toFixed(0);
-                document.getElementById('docSize').value = `${sizeKB} KB`;
-
                 const ext = file.name.split('.').pop().toUpperCase();
                 if (['DOCX', 'PDF', 'XLSX'].includes(ext)) {
                     document.getElementById('docFormat').value = ext;
                 }
 
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    selectedFileBase64 = e.target.result.split(',')[1];
-                    selectedFileMeta = {
-                        name: file.name,
-                        type: file.type
+                reader.onload = (event) => {
+                    selectedFileBase64 = event.target.result.split(',')[1];
+                    selectedFileMeta = { 
+                        name: file.name, 
+                        type: file.type, 
+                        size: (file.size / 1024).toFixed(0) + ' KB' 
                     };
                 };
                 reader.readAsDataURL(file);
@@ -549,107 +449,64 @@
 
         async function handleFormSubmit(e) {
             e.preventDefault();
-            if (!isAdmin) return;
+            if (!isAdmin || !selectedFileBase64) return;
 
             const submitBtn = document.getElementById('submitBtn');
-            const title = document.getElementById('docTitle').value;
-            const category = document.getElementById('docCategory').value;
-            const format = document.getElementById('docFormat').value;
-            const description = document.getElementById('docDescription').value;
-            const size = document.getElementById('docSize').value || '120 KB';
-            const today = new Date().toISOString().split('T')[0];
-
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Menyimpan & Mengunggah...';
-            showToast('Mengirim berkas ke Google Sheets & Drive...', 'info');
+            submitBtn.textContent = 'Mengunggah ke Drive...';
+            showToast('Mengunggah berkas...', 'info');
 
             const payload = {
-                id: 'doc-' + Date.now(),
-                title: title,
-                category: category,
-                format: format,
-                description: description,
-                size: size,
-                updatedAt: today,
-                fileName: selectedFileMeta ? selectedFileMeta.name : '',
-                mimeType: selectedFileMeta ? selectedFileMeta.type : '',
-                fileData: selectedFileBase64 || ''
+                fileName: selectedFileMeta.name,
+                mimeType: selectedFileMeta.type,
+                fileData: selectedFileBase64,
+                title: document.getElementById('docTitle').value,
+                category: document.getElementById('docCategory').value,
+                format: document.getElementById('docFormat').value,
+                description: document.getElementById('docDescription').value,
+                size: selectedFileMeta.size
             };
 
             try {
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
                     body: JSON.stringify(payload)
                 });
-
-                const result = await response.json();
-                if (result.status === 'success') {
-                    showToast('Berkas berhasil tersimpan dan siap dipublikasikan!', 'success');
-                    closeUploadModal();
-                    fetchDocumentsFromDatabase();
-                } else {
-                    showToast('Gagal menyimpan berkas: ' + result.message, 'danger');
-                }
+                showToast('Berkas berhasil disimpan!', 'success');
+                closeUploadModal();
+                fetchDocumentsOnline();
             } catch (err) {
-                console.error(err);
-                showToast('Terjadi kesalahan koneksi', 'danger');
+                showToast('Gagal mengunggah berkas', 'danger');
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Simpan & Unggah';
             }
         }
 
-        // FUNGSI UNDUH BERKAS (TANPA TEKS/ISI DOKUMEN BAWAAN)
-        function downloadFile(title, format, driveUrl) {
-            if (driveUrl) {
-                showToast('Membuka tautan berkas dari Google Drive...', 'info');
-                window.open(driveUrl, '_blank');
-                return;
+        function downloadFile(url) {
+            if (url && url.startsWith('http')) {
+                window.open(url, '_blank');
+            } else {
+                showToast('Tautan berkas tidak valid atau belum diunggah ke Drive', 'danger');
             }
-
-            showToast(`Mengunduh berkas: ${title}.${format.toLowerCase()}...`, 'info');
-
-            // Berkas dibuat kosong tanpa teks bawaan
-            const content = "";
-            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-            const filename = `${title.replace(/[^a-zA-Z0-9]/g, '_')}.${format.toLowerCase()}`;
-
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
         }
 
         function showToast(message, type = 'info') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
+            let bg = 'bg-usu-main';
+            if (type === 'success') bg = 'bg-emerald-700';
+            if (type === 'danger') bg = 'bg-rose-700';
 
-            let bgClass = 'bg-usu-dark text-white border border-emerald-700';
-            if (type === 'success') bgClass = 'bg-emerald-700 text-white';
-            if (type === 'danger') bgClass = 'bg-rose-700 text-white';
-            if (type === 'info') bgClass = 'bg-usu-main text-white';
-
-            toast.className = `pointer-events-auto px-4 py-3 rounded-xl shadow-xl text-xs sm:text-sm font-semibold flex items-center space-x-2 transition-all transform translate-y-2 opacity-0 ${bgClass}`;
-            toast.innerHTML = `
-                <svg class="w-4 h-4 flex-shrink-0 text-usu-yellow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                <span>${escapeHtml(message)}</span>
-            `;
-
+            toast.className = `px-4 py-3 rounded-xl shadow-xl text-xs font-semibold text-white ${bg} transition transform translate-y-2 opacity-0`;
+            toast.innerText = message;
             container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.classList.remove('translate-y-2', 'opacity-0');
-            }, 10);
-
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-y-2');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+            setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
+            setTimeout(() => { toast.classList.add('opacity-0'); setTimeout(() => toast.remove(), 300); }, 3000);
         }
 
         function escapeHtml(text) {
+            if (!text) return '';
             const div = document.createElement('div');
             div.innerText = text;
             return div.innerHTML;
