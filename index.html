@@ -12,12 +12,12 @@
                 extend: {
                     colors: {
                         usu: {
-                            dark: '#043e30',
-                            main: '#064e3b',
-                            hover: '#08634c',
-                            active: '#0b7258',
-                            yellow: '#f59e0b',
-                            accent: '#10b981',
+                            dark: '#043e30',      // Hijau tua header/sidebar
+                            main: '#064e3b',      // Hijau elemen utama
+                            hover: '#08634c',     // Hijau hover
+                            active: '#0b7258',    // Hijau menu aktif
+                            yellow: '#f59e0b',    // Kuning emas khas USU
+                            accent: '#10b981',    // Aksen hijau terang
                         }
                     }
                 }
@@ -138,15 +138,15 @@
             <div id="adminNotice" class="hidden bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center justify-between text-emerald-900 text-xs sm:text-sm shadow-sm">
                 <div class="flex items-center space-x-2.5">
                     <svg class="w-5 h-5 text-usu-main flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    <span><strong>Mode Staf/Admin Aktif:</strong> Anda dapat mengunggah berkas baru.</span>
+                    <span><strong>Mode Staf/Admin Aktif:</strong> Anda dapat mengunggah berkas baru yang langsung tersimpan di Google Sheets & Drive.</span>
                 </div>
                 <button onclick="logoutAdmin()" class="text-rose-600 hover:underline font-bold ml-2">Keluar Mode Admin</button>
             </div>
 
-            <!-- Loading Spinner -->
+            <!-- Loading Indicator -->
             <div id="loadingState" class="text-center py-12">
-                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-emerald-600 border-t-transparent"></div>
-                <p class="text-xs text-slate-500 mt-2">Memuat data berkas dari server...</p>
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-usu-main border-t-transparent"></div>
+                <p class="text-xs text-slate-500 mt-2 font-medium">Sedang memuat berkas terbaru...</p>
             </div>
 
             <!-- Document Grid -->
@@ -158,7 +158,7 @@
             <div id="emptyState" class="hidden text-center py-12 bg-white rounded-2xl border border-dashed border-slate-300 p-8">
                 <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                 <h3 class="text-base font-semibold text-slate-800">Tidak ada berkas ditemukan</h3>
-                <p class="text-xs text-slate-500 mt-1">Belum ada berkas diunggah atau tidak sesuai dengan kata kunci pencarian.</p>
+                <p class="text-xs text-slate-500 mt-1">Belum ada berkas di database atau coba sesuaikan kata kunci pencarian Anda.</p>
             </div>
         </section>
     </main>
@@ -201,7 +201,7 @@
         </div>
     </div>
 
-    <!-- Upload Modal -->
+    <!-- Upload/Edit Modal -->
     <div id="uploadModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 max-w-lg w-full overflow-hidden transition-all transform">
             <div class="px-6 py-4 border-b border-emerald-900/10 flex items-center justify-between bg-usu-dark text-white">
@@ -212,6 +212,8 @@
             </div>
             
             <form id="documentForm" onsubmit="handleFormSubmit(event)" class="p-6 space-y-4">
+                <input type="hidden" id="editDocId" value="">
+
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Judul Dokumen / Form *</label>
                     <input type="text" id="docTitle" required placeholder="Contoh: Template Undangan Seminar Proposal" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-sm focus:ring-2 focus:ring-usu-main outline-none">
@@ -249,7 +251,7 @@
 
                 <!-- File Input -->
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Pilih File Berkas *</label>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Pilih File Berkas</label>
                     <div class="mt-1 flex justify-center px-6 pt-4 pb-4 border-2 border-slate-300 border-dashed rounded-xl hover:border-usu-main transition bg-slate-50">
                         <div class="space-y-1 text-center">
                             <svg class="mx-auto h-8 w-8 text-usu-main" stroke="currentColor" fill="none" viewBox="0 0 48 48">
@@ -258,8 +260,9 @@
                             <div class="flex text-xs text-slate-600 justify-center">
                                 <label for="fileUploadInput" class="relative cursor-pointer bg-white rounded-md font-bold text-usu-main hover:underline">
                                     <span>Pilih file lokal</span>
-                                    <input id="fileUploadInput" name="fileUploadInput" type="file" required class="sr-only" onchange="handleFileSelect(event)">
+                                    <input id="fileUploadInput" name="fileUploadInput" type="file" class="sr-only" onchange="handleFileSelect(event)">
                                 </label>
+                                <p class="pl-1">atau tarik ke sini</p>
                             </div>
                             <p id="fileNameDisplay" class="text-xs text-slate-500 italic">Format support: .docx, .pdf, .xlsx</p>
                         </div>
@@ -268,7 +271,7 @@
 
                 <div class="flex items-center justify-end space-x-3 pt-3 border-t border-slate-100">
                     <button type="button" onclick="closeUploadModal()" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">Batal</button>
-                    <button type="submit" id="submitBtn" class="px-5 py-2 text-sm font-bold text-white bg-usu-main hover:bg-usu-hover rounded-xl shadow-md transition">Simpan & Unggah ke Server</button>
+                    <button type="submit" id="submitBtn" class="px-5 py-2 text-sm font-bold text-white bg-usu-main hover:bg-usu-hover rounded-xl shadow-md transition">Simpan & Unggah</button>
                 </div>
             </form>
         </div>
@@ -277,7 +280,7 @@
     <div id="toastContainer" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
 
     <script>
-        // URL WEB APP GOOGLE APPS SCRIPT ANDA
+        // URL WEB APP APPS SCRIPT
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxbUq3KSUV1OlDnKgKBSIEbgIQX63zeLkXghBgHcv_4mmxs4PnnQNbOhGG6890Aj9YO/exec";
         
         const ADMIN_PASSWORD = "@adminagb";
@@ -289,30 +292,30 @@
         let isAdmin = false;
 
         window.onload = function() {
-            fetchDocumentsFromCloud();
+            fetchDocumentsFromDatabase();
         };
 
-        async function fetchDocumentsFromCloud() {
-            const loading = document.getElementById('loadingState');
+        async function fetchDocumentsFromDatabase() {
+            const loadingState = document.getElementById('loadingState');
             const grid = document.getElementById('documentGrid');
-            
-            loading.classList.remove('hidden');
+            loadingState.classList.remove('hidden');
             grid.classList.add('hidden');
 
             try {
                 const response = await fetch(GOOGLE_SCRIPT_URL);
-                const data = await response.json();
+                const result = await response.json();
                 
-                if (Array.isArray(data)) {
-                    documents = data;
+                if (result.status === 'success' && Array.isArray(result.data)) {
+                    documents = result.data;
                 } else {
                     documents = [];
                 }
             } catch (e) {
-                console.error("Gagal mengambil data dari Google Sheets:", e);
+                console.error('Error memuat data:', e);
                 showToast('Gagal memuat data dari database', 'danger');
+                documents = [];
             } finally {
-                loading.classList.add('hidden');
+                loadingState.classList.add('hidden');
                 grid.classList.remove('hidden');
                 renderDocuments();
             }
@@ -399,8 +402,8 @@
             const filtered = documents.filter(doc => {
                 const matchCategory = (currentCategory === 'all') || (doc.category === currentCategory);
                 const matchFormat = (selectedFormat === 'all') || (doc.format === selectedFormat);
-                const matchSearch = (doc.title && doc.title.toLowerCase().includes(searchKeyword)) || 
-                                    (doc.description && doc.description.toLowerCase().includes(searchKeyword));
+                const matchSearch = (doc.title || '').toLowerCase().includes(searchKeyword) || 
+                                    (doc.description || '').toLowerCase().includes(searchKeyword);
 
                 return matchCategory && matchFormat && matchSearch;
             });
@@ -418,7 +421,7 @@
 
             grid.innerHTML = '';
 
-            if (docsToRender.length === 0) {
+            if (!docsToRender || docsToRender.length === 0) {
                 emptyState.classList.remove('hidden');
                 return;
             } else {
@@ -451,11 +454,11 @@
 
                     <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between">
                         <div class="text-[11px] text-slate-400 font-medium">
-                            <span>${doc.format || 'FILE'} • ${doc.size || '150 KB'}</span>
+                            <span>${doc.format} • ${doc.size || '150 KB'}</span>
                             <div class="text-[10px] text-slate-400">Tgl: ${doc.updatedAt || 'Terbaru'}</div>
                         </div>
 
-                        <button onclick="downloadFile('${doc.driveUrl || ''}')" class="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 text-usu-main hover:bg-usu-main hover:text-white transition-all duration-150">
+                        <button onclick="downloadFile('${escapeHtml(doc.title)}', '${doc.format}', '${doc.driveUrl || ''}')" class="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 text-usu-main hover:bg-usu-main hover:text-white transition-all duration-150">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                             <span>Unduh</span>
                         </button>
@@ -507,6 +510,7 @@
                 return;
             }
             document.getElementById('modalTitle').textContent = 'Unggah Berkas Dokumen Baru';
+            document.getElementById('editDocId').value = '';
             document.getElementById('documentForm').reset();
             document.getElementById('fileNameDisplay').textContent = 'Format support: .docx, .pdf, .xlsx';
             selectedFileBase64 = null;
@@ -535,8 +539,8 @@
                 reader.onload = function(e) {
                     selectedFileBase64 = e.target.result.split(',')[1];
                     selectedFileMeta = {
-                        fileName: file.name,
-                        mimeType: file.type
+                        name: file.name,
+                        type: file.type
                     };
                 };
                 reader.readAsDataURL(file);
@@ -547,25 +551,29 @@
             e.preventDefault();
             if (!isAdmin) return;
 
-            if (!selectedFileBase64 || !selectedFileMeta) {
-                showToast('Silakan pilih berkas dokumen terlebih dahulu!', 'danger');
-                return;
-            }
-
             const submitBtn = document.getElementById('submitBtn');
+            const title = document.getElementById('docTitle').value;
+            const category = document.getElementById('docCategory').value;
+            const format = document.getElementById('docFormat').value;
+            const description = document.getElementById('docDescription').value;
+            const size = document.getElementById('docSize').value || '120 KB';
+            const today = new Date().toISOString().split('T')[0];
+
             submitBtn.disabled = true;
             submitBtn.textContent = 'Menyimpan & Mengunggah...';
-            showToast('Mengunggah data ke server terpusat...', 'info');
+            showToast('Mengirim berkas ke Google Sheets & Drive...', 'info');
 
             const payload = {
-                title: document.getElementById('docTitle').value,
-                category: document.getElementById('docCategory').value,
-                format: document.getElementById('docFormat').value,
-                description: document.getElementById('docDescription').value,
-                size: document.getElementById('docSize').value || '120 KB',
-                fileName: selectedFileMeta.fileName,
-                mimeType: selectedFileMeta.mimeType,
-                fileData: selectedFileBase64
+                id: 'doc-' + Date.now(),
+                title: title,
+                category: category,
+                format: format,
+                description: description,
+                size: size,
+                updatedAt: today,
+                fileName: selectedFileMeta ? selectedFileMeta.name : '',
+                mimeType: selectedFileMeta ? selectedFileMeta.type : '',
+                fileData: selectedFileBase64 || ''
             };
 
             try {
@@ -576,28 +584,40 @@
 
                 const result = await response.json();
                 if (result.status === 'success') {
-                    showToast('Berkas berhasil disimpan secara publik!', 'success');
+                    showToast('Berkas berhasil tersimpan dan siap dipublikasikan!', 'success');
                     closeUploadModal();
-                    await fetchDocumentsFromCloud();
+                    fetchDocumentsFromDatabase();
                 } else {
-                    showToast('Gagal unggah: ' + result.message, 'danger');
+                    showToast('Gagal menyimpan berkas: ' + result.message, 'danger');
                 }
             } catch (err) {
                 console.error(err);
-                showToast('Terjadi kesalahan koneksi server', 'danger');
+                showToast('Terjadi kesalahan koneksi', 'danger');
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'Simpan & Unggah ke Server';
+                submitBtn.textContent = 'Simpan & Unggah';
             }
         }
 
-        function downloadFile(driveUrl) {
+        function downloadFile(title, format, driveUrl) {
             if (driveUrl) {
-                showToast('Membuka tautan berkas...', 'info');
+                showToast('Membuka tautan berkas dari Google Drive...', 'info');
                 window.open(driveUrl, '_blank');
-            } else {
-                showToast('Tautan berkas tidak valid!', 'danger');
+                return;
             }
+
+            showToast(`Mengunduh berkas contoh: ${title}.${format.toLowerCase()}...`, 'info');
+
+            const content = `UNIVERSITAS SUMATERA UTARA\nFAKULTAS PERTANIAN - PROGRAM STUDI AGRIBISNIS\n\nBERKAS: ${title.toUpperCase()}`;
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const filename = `${title.replace(/[^a-zA-Z0-9]/g, '_')}_Template.${format.toLowerCase()}`;
+
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         function showToast(message, type = 'info') {
