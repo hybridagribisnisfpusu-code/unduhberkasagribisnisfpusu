@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full bg-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Berkas Program Studi Agribisnis - Universitas Sumatera Utara</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        usu: {
+                            dark: '#043e30',      // Hijau tua header/sidebar
+                            main: '#064e3b',      // Hijau elemen utama
+                            hover: '#08634c',     // Hijau hover
+                            active: '#0b7258',    // Hijau menu aktif
+                            yellow: '#f59e0b',    // Kuning emas khas USU
+                            accent: '#10b981',    // Aksen hijau terang
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="h-full flex flex-col justify-between text-slate-800 antialiased selection:bg-usu-yellow selection:text-usu-dark">
+
+    <!-- Header / Navbar Utama -->
+    <header class="sticky top-0 z-30 bg-usu-dark border-b border-emerald-900 shadow-lg text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Logo USU & Identitas Institusi -->
+                <div class="flex items-center space-x-3.5">
+                    <!-- Wrapper Logo Lingkaran dengan Ring Kuning Emas -->
+                    <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center p-1 shadow-md border-[2.5px] border-amber-500 flex-shrink-0">
+                        <img 
+                            src="https://upload.wikimedia.org/wikipedia/commons/9/90/Logo_of_North_Sumatra_University.svg" 
+                            alt="Logo Universitas Sumatera Utara" 
+                            class="w-full h-full object-contain"
+                        >
+                    </div>
+
+                    <!-- Teks Deskripsi -->
+                    <div>
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-400 block leading-tight">Sistem Unduh Berkas</span>
+                        <h1 class="text-lg font-extrabold text-amber-500 leading-tight">Program Studi Agribisnis</h1>
+                        <p class="text-xs text-emerald-100/90 font-medium leading-tight mt-0.5">Fakultas Pertanian • Universitas Sumatera Utara</p>
+                    </div>
+                </div>
+
+                <!-- Tombol Mode Staf / Admin -->
+                <div class="flex items-center space-x-3">
+                    <button id="adminToggleBtn" onclick="handleAdminToggle()" class="inline-flex items-center space-x-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 bg-emerald-900/60 hover:bg-emerald-800 text-emerald-100 border border-emerald-700/50">
+                        <svg id="adminLockIcon" class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                        <span id="adminBtnText">Admin Program Studi</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- Hero Section -->
+        <section class="bg-usu-main text-white py-10 px-4 sm:px-6 lg:px-8 border-b border-emerald-900 shadow-inner">
+            <div class="max-w-4xl mx-auto text-center space-y-4">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-900/80 text-usu-yellow border border-usu-yellow/40">
+                    <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Pusat Unduhan Berkas Resmi
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+                    Layanan Unduh Berkas Undangan Seminar, Sidang & Lainnya
+                </h2>
+                <p class="text-emerald-100 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+                    Silakan unduh surat undangan resmi untuk Seminar Proposal, Seminar Hasil, serta Sidang Skripsi & Lainnya.
+                </p>
+
+                <!-- Search Input -->
+                <div class="pt-4 max-w-xl mx-auto">
+                    <div class="relative rounded-xl shadow-lg">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        </div>
+                        <input type="text" id="searchInput" oninput="filterDocuments()" placeholder="Cari dokumen atau kata kunci..." class="block w-full pl-10 pr-4 py-3 rounded-xl border border-emerald-800 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-usu-yellow text-sm transition-all shadow-md">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content Area -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+            <!-- Filter Bar & Actions -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+                <!-- Category Tabs -->
+                <div class="flex items-center space-x-1.5 overflow-x-auto pb-2 sm:pb-0 no-scrollbar" id="categoryTabs">
+                    <button onclick="setCategory('all')" data-category="all" class="category-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-150 bg-usu-main text-white shadow-sm whitespace-nowrap">
+                        Semua Berkas
+                    </button>
+                    <button onclick="setCategory('sempro')" data-category="sempro" class="category-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-emerald-50 transition-all duration-150 whitespace-nowrap">
+                        Seminar Proposal
+                    </button>
+                    <button onclick="setCategory('semhas')" data-category="semhas" class="category-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-emerald-50 transition-all duration-150 whitespace-nowrap">
+                        Seminar Hasil
+                    </button>
+                    <button onclick="setCategory('sidang')" data-category="sidang" class="category-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-emerald-50 transition-all duration-150 whitespace-nowrap">
+                        Sidang Skripsi
+                    </button>
+                    <button onclick="setCategory('panduan')" data-category="panduan" class="category-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-emerald-50 transition-all duration-150 whitespace-nowrap">
+                        Panduan & Umum
+                    </button>
+                </div>
+
+                <!-- Secondary Filters & Admin Action -->
+                <div class="flex items-center justify-between sm:justify-end gap-3">
+                    <select id="formatFilter" onchange="filterDocuments()" class="bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs sm:text-sm font-medium text-slate-700 focus:ring-usu-main focus:border-usu-main shadow-sm">
+                        <option value="all">Semua Format (DOCX, PDF, XLSX)</option>
+                        <option value="DOCX">Format DOCX (Word)</option>
+                        <option value="PDF">Format PDF</option>
+                        <option value="XLSX">Format XLSX (Excel)</option>
+                    </select>
+
+                    <button id="uploadNewBtn" onclick="openUploadModal()" class="hidden inline-flex items-center space-x-1.5 bg-usu-yellow hover:bg-amber-600 text-usu-dark px-4 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-md transition-all">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        <span>Unggah Berkas</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Admin Notice Banner -->
+            <div id="adminNotice" class="hidden bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center justify-between text-emerald-900 text-xs sm:text-sm shadow-sm">
+                <div class="flex items-center space-x-2.5">
+                    <svg class="w-5 h-5 text-usu-main flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <span><strong>Mode Staf/Admin Aktif:</strong> Anda dapat mengunggah berkas baru atau memperbarui data berkas yang ada.</span>
+                </div>
+                <button onclick="logoutAdmin()" class="text-rose-600 hover:underline font-bold ml-2">Keluar Mode Admin</button>
+            </div>
+
+            <!-- Document Grid -->
+            <div id="documentGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Dynamic Content -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="hidden text-center py-12 bg-white rounded-2xl border border-dashed border-slate-300 p-8">
+                <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                <h3 class="text-base font-semibold text-slate-800">Tidak ada berkas ditemukan</h3>
+                <p class="text-xs text-slate-500 mt-1">Coba ubah kata kunci pencarian atau ganti filter kategori.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-usu-dark text-emerald-100 border-t border-emerald-900 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-left sm:flex sm:items-center sm:justify-between text-xs">
+            <p>&copy; 2026 Program Studi Agribisnis - Fakukltas Pertanian - Universitas Sumatera Utara.</p>
+            <p class="mt-2 sm:mt-0 text-emerald-300">Dikembangkan untuk Kemudahan Mahasiswa </p>
+        </div>
+    </footer>
+
+    <!-- MODAL AUTHENTIKASI ADMIN (PASSWORD) -->
+    <div id="adminAuthModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 max-w-sm w-full overflow-hidden transition-all transform">
+            <div class="px-6 py-4 border-b border-emerald-900/10 bg-usu-dark text-white flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                    <h3 class="text-sm font-bold text-amber-500">Autentikasi Staf / Admin</h3>
+                </div>
+                <button onclick="closeAuthModal()" class="text-emerald-200 hover:text-white rounded-lg p-1 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            
+            <form onsubmit="verifyAdminPassword(event)" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Kata Sandi Akses</label>
+                    <input type="password" id="adminPasswordInput" required placeholder="Masukkan kata sandi..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-sm focus:ring-2 focus:ring-usu-main outline-none">
+                    <p id="authErrorMessage" class="text-xs text-rose-600 font-semibold mt-1.5 hidden">Kata sandi tidak sesuai!</p>
+                </div>
+
+                <div class="bg-amber-50 rounded-xl p-3 border border-amber-200/80 text-[11px] text-amber-800">
+                    <span class="font-bold">Sudah Masukkan Paswoord</span> <code class="bg-amber-100 px-1 py-0.5 rounded font-mono text-amber-900">Silahkan Pilih Masuk</code>
+                </div>
+
+                <div class="flex items-center justify-end space-x-2 pt-2">
+                    <button type="button" onclick="closeAuthModal()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">Batal</button>
+                    <button type="submit" class="px-5 py-2 text-xs font-bold text-white bg-usu-main hover:bg-usu-hover rounded-xl shadow-md transition">Masuk</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Upload/Edit Modal -->
+    <div id="uploadModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 max-w-lg w-full overflow-hidden transition-all transform">
+            <div class="px-6 py-4 border-b border-emerald-900/10 flex items-center justify-between bg-usu-dark text-white">
+                <h3 id="modalTitle" class="text-base font-bold text-usu-yellow">Unggah Berkas Dokumen Baru</h3>
+                <button onclick="closeUploadModal()" class="text-emerald-200 hover:text-white rounded-lg p-1 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            
+            <form id="documentForm" onsubmit="handleFormSubmit(event)" class="p-6 space-y-4">
+                <input type="hidden" id="editDocId" value="">
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Judul Dokumen / Form *</label>
+                    <input type="text" id="docTitle" required placeholder="Contoh: Template Undangan Seminar Proposal" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-sm focus:ring-2 focus:ring-usu-main outline-none">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Kategori *</label>
+                        <select id="docCategory" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-sm focus:ring-2 focus:ring-usu-main outline-none">
+                            <option value="sempro">Seminar Proposal</option>
+                            <option value="semhas">Seminar Hasil</option>
+                            <option value="sidang">Sidang Skripsi</option>
+                            <option value="panduan">Panduan & Umum</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Format Berkas *</label>
+                        <select id="docFormat" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-sm focus:ring-2 focus:ring-usu-main outline-none">
+                            <option value="DOCX">DOCX (Word)</option>
+                            <option value="PDF">PDF (Dokumen)</option>
+                            <option value="XLSX">XLSX (Excel)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Deskripsi Singkat</label>
+                    <textarea id="docDescription" rows="2" placeholder="Deskripsi peruntukan berkas ini..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-sm focus:ring-2 focus:ring-usu-main outline-none"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Ukuran File (MB/KB)</label>
+                    <input type="text" id="docSize" placeholder="Contoh: 145 KB atau 1.2 MB" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-sm focus:ring-2 focus:ring-usu-main outline-none">
+                </div>
+
+                <!-- File Input -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Pilih File Berkas</label>
+                    <div class="mt-1 flex justify-center px-6 pt-4 pb-4 border-2 border-slate-300 border-dashed rounded-xl hover:border-usu-main transition bg-slate-50">
+                        <div class="space-y-1 text-center">
+                            <svg class="mx-auto h-8 w-8 text-usu-main" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                <path d="M28 8H12a4 4 0 00-4 4v20a4 4 0 004 4h24a4 4 0 004-4V20L28 8z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            <div class="flex text-xs text-slate-600 justify-center">
+                                <label for="fileUploadInput" class="relative cursor-pointer bg-white rounded-md font-bold text-usu-main hover:underline">
+                                    <span>Pilih file lokal</span>
+                                    <input id="fileUploadInput" name="fileUploadInput" type="file" class="sr-only" onchange="handleFileSelect(event)">
+                                </label>
+                                <p class="pl-1">atau tarik ke sini</p>
+                            </div>
+                            <p id="fileNameDisplay" class="text-xs text-slate-500 italic">Format support: .docx, .pdf, .xlsx</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end space-x-3 pt-3 border-t border-slate-100">
+                    <button type="button" onclick="closeUploadModal()" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">Batal</button>
+                    <button type="submit" id="submitBtn" class="px-5 py-2 text-sm font-bold text-white bg-usu-main hover:bg-usu-hover rounded-xl shadow-md transition">Simpan & Unggah ke Drive</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
+
+    <script>
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzJCt7CdulThXp7fkTIvHMNloB-m7m9Mtc2feg_XHjA-tDuGZSiymmtu_sKxTog1P3H/exec";
+        
+        // KONFIGURASI PASSWORD ADMIN
+        const ADMIN_PASSWORD = "@adminagb";
+
+        let selectedFileBase64 = null;
+        let selectedFileMeta = null;
+
+        const defaultDocuments = [
+            {
+                id: 'doc-1',
+                title: 'Surat Undangan & Form Seminar Proposal',
+                category: 'sempro',
+                format: 'DOCX',
+                description: 'Format surat undangan resmi dosen penguji, lembar persetujuan pembimbing, dan berita acara sempro.',
+                size: '142 KB',
+                driveUrl: '',
+                updatedAt: '2026-03-10'
+            },
+            {
+                id: 'doc-2',
+                title: 'Checklist Syarat Pendaftaran Sempro',
+                category: 'sempro',
+                format: 'PDF',
+                description: 'Daftar kelengkapan berkas administrasi sebelum mendaftar seminar proposal skripsi.',
+                size: '210 KB',
+                driveUrl: '',
+                updatedAt: '2026-02-28'
+            },
+            {
+                id: 'doc-3',
+                title: 'Template Undangan & Berita Acara Seminar Hasil',
+                category: 'semhas',
+                format: 'DOCX',
+                description: 'Formulir undangan dosen penguji semhas, form penilaian, dan rekap revisi hasil penelitian.',
+                size: '156 KB',
+                driveUrl: '',
+                updatedAt: '2026-03-01'
+            },
+            {
+                id: 'doc-4',
+                title: 'Form Assessment & Nilai Seminar Hasil',
+                category: 'semhas',
+                format: 'XLSX',
+                description: 'Lembar kerja perhitungan bobot nilai seminar hasil untuk tim penguji.',
+                size: '88 KB',
+                driveUrl: '',
+                updatedAt: '2026-01-15'
+            },
+            {
+                id: 'doc-5',
+                title: 'Berkas Undangan & Kelengkapan Sidang Skripsi',
+                category: 'sidang',
+                format: 'DOCX',
+                description: 'Paket undangan sidang munaqasyah, draf persetujuan majelis penguji, serta form kelulusan.',
+                size: '180 KB',
+                driveUrl: '',
+                updatedAt: '2026-03-15'
+            },
+            {
+                id: 'doc-6',
+                title: 'Pedoman Penulisan Skripsi & Etika Akademik',
+                category: 'panduan',
+                format: 'PDF',
+                description: 'Buku panduan resmi tata cara penulisan skripsi, margin, sitasi, dan tata tertib seminar/sidang.',
+                size: '2.4 MB',
+                driveUrl: '',
+                updatedAt: '2026-01-05'
+            }
+        ];
+
+        let documents = [];
+        let currentCategory = 'all';
+        let isAdmin = false;
+
+        window.onload = function() {
+            const savedDocs = localStorage.getItem('academic_docs');
+            if (savedDocs) {
+                try {
+                    documents = JSON.parse(savedDocs);
+                } catch (e) {
+                    documents = [...defaultDocuments];
+                }
+            } else {
+                documents = [...defaultDocuments];
+                saveToLocalStorage();
+            }
+            renderDocuments();
+        };
+
+        function saveToLocalStorage() {
+            localStorage.setItem('academic_docs', JSON.stringify(documents));
+        }
+
+        // FUNGSI LOGIKA AKSI LOGIN & LOGOUT ADMIN
+        function handleAdminToggle() {
+            if (isAdmin) {
+                logoutAdmin();
+            } else {
+                openAuthModal();
+            }
+        }
+
+        function openAuthModal() {
+            document.getElementById('adminPasswordInput').value = '';
+            document.getElementById('authErrorMessage').classList.add('hidden');
+            document.getElementById('adminAuthModal').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('adminPasswordInput').focus();
+            }, 100);
+        }
+
+        function closeAuthModal() {
+            document.getElementById('adminAuthModal').classList.add('hidden');
+        }
+
+        function verifyAdminPassword(e) {
+            e.preventDefault();
+            const inputPassword = document.getElementById('adminPasswordInput').value;
+            const errorMsg = document.getElementById('authErrorMessage');
+
+            if (inputPassword === ADMIN_PASSWORD) {
+                isAdmin = true;
+                closeAuthModal();
+                updateAdminStateUI();
+                showToast('Login Admin Berhasil!', 'success');
+            } else {
+                errorMsg.classList.remove('hidden');
+            }
+        }
+
+        function logoutAdmin() {
+            isAdmin = false;
+            updateAdminStateUI();
+            showToast('Anda telah keluar dari Mode Admin', 'info');
+        }
+
+        function updateAdminStateUI() {
+            const btnText = document.getElementById('adminBtnText');
+            const adminNotice = document.getElementById('adminNotice');
+            const uploadBtn = document.getElementById('uploadNewBtn');
+
+            if (isAdmin) {
+                btnText.textContent = 'Mode Mahasiswa (Keluar)';
+                adminNotice.classList.remove('hidden');
+                uploadBtn.classList.remove('hidden');
+            } else {
+                btnText.textContent = 'Mode Staf / Admin';
+                adminNotice.classList.add('hidden');
+                uploadBtn.classList.add('hidden');
+            }
+
+            renderDocuments();
+        }
+
+        function setCategory(category) {
+            currentCategory = category;
+            
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                if (btn.getAttribute('data-category') === category) {
+                    btn.className = 'category-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-150 bg-usu-main text-white shadow-sm whitespace-nowrap';
+                } else {
+                    btn.className = 'category-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-emerald-50 transition-all duration-150 whitespace-nowrap';
+                }
+            });
+
+            filterDocuments();
+        }
+
+        function filterDocuments() {
+            const searchKeyword = document.getElementById('searchInput').value.toLowerCase().trim();
+            const selectedFormat = document.getElementById('formatFilter').value;
+
+            const filtered = documents.filter(doc => {
+                const matchCategory = (currentCategory === 'all') || (doc.category === currentCategory);
+                const matchFormat = (selectedFormat === 'all') || (doc.format === selectedFormat);
+                const matchSearch = doc.title.toLowerCase().includes(searchKeyword) || 
+                                    doc.description.toLowerCase().includes(searchKeyword);
+
+                return matchCategory && matchFormat && matchSearch;
+            });
+
+            renderGrid(filtered);
+        }
+
+        function renderDocuments() {
+            filterDocuments();
+        }
+
+        function renderGrid(docsToRender) {
+            const grid = document.getElementById('documentGrid');
+            const emptyState = document.getElementById('emptyState');
+
+            grid.innerHTML = '';
+
+            if (docsToRender.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            docsToRender.forEach(doc => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-2xl border border-slate-200/90 p-5 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between group hover:border-emerald-300';
+
+                const categoryBadge = getCategoryBadge(doc.category);
+                const formatIcon = getFormatIcon(doc.format);
+
+                card.innerHTML = `
+                    <div class="space-y-3">
+                        <div class="flex items-start justify-between gap-2">
+                            <div class="p-2.5 rounded-xl ${formatIcon.bgColor} ${formatIcon.textColor} transition group-hover:scale-105">
+                                ${formatIcon.svg}
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                ${categoryBadge}
+                                ${isAdmin ? `
+                                    <button onclick="editDocument('${doc.id}')" title="Edit Berkas" class="text-slate-400 hover:text-usu-main p-1 rounded-md hover:bg-emerald-50 transition">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 012.828 0L20 4.828a2 2 0 010 2.828l-8.586 8.586a1 1 0 01-.414.293l-4 1a1 1 0 01-1.213-1.213l1-4a1 1 0 01.293-.414l8.586-8.586z"/></svg>
+                                    </button>
+                                    <button onclick="deleteDocument('${doc.id}')" title="Hapus Berkas" class="text-slate-400 hover:text-rose-600 p-1 rounded-md hover:bg-rose-50 transition">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="font-bold text-slate-900 group-hover:text-usu-main transition-colors line-clamp-2">${escapeHtml(doc.title)}</h3>
+                            <p class="text-xs text-slate-500 mt-1.5 line-clamp-2 leading-relaxed">${escapeHtml(doc.description || 'Tidak ada deskripsi berkas.')}</p>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between">
+                        <div class="text-[11px] text-slate-400 font-medium">
+                            <span>${doc.format} • ${doc.size || '150 KB'}</span>
+                            <div class="text-[10px] text-slate-400">Tgl: ${doc.updatedAt || 'Terbaru'}</div>
+                        </div>
+
+                        <button onclick="downloadFile('${escapeHtml(doc.title)}', '${doc.format}', '${doc.driveUrl || ''}')" class="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 text-usu-main hover:bg-usu-main hover:text-white transition-all duration-150">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                            <span>Unduh</span>
+                        </button>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        function getCategoryBadge(cat) {
+            switch(cat) {
+                case 'sempro':
+                    return `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-usu-main border border-emerald-300">Sempro</span>`;
+                case 'semhas':
+                    return `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-teal-100 text-teal-800 border border-teal-300">Semhas</span>`;
+                case 'sidang':
+                    return `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300">Sidang</span>`;
+                default:
+                    return `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-600 border border-slate-200">Panduan</span>`;
+            }
+        }
+
+        function getFormatIcon(format) {
+            if (format === 'DOCX') {
+                return {
+                    bgColor: 'bg-emerald-100',
+                    textColor: 'text-usu-main',
+                    svg: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>`
+                };
+            } else if (format === 'PDF') {
+                return {
+                    bgColor: 'bg-rose-100',
+                    textColor: 'text-rose-600',
+                    svg: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>`
+                };
+            } else {
+                return {
+                    bgColor: 'bg-amber-100',
+                    textColor: 'text-amber-700',
+                    svg: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>`
+                };
+            }
+        }
+
+        function openUploadModal() {
+            if (!isAdmin) {
+                openAuthModal();
+                return;
+            }
+            document.getElementById('modalTitle').textContent = 'Unggah Berkas Dokumen Baru';
+            document.getElementById('editDocId').value = '';
+            document.getElementById('documentForm').reset();
+            document.getElementById('fileNameDisplay').textContent = 'Format support: .docx, .pdf, .xlsx';
+            selectedFileBase64 = null;
+            selectedFileMeta = null;
+            document.getElementById('uploadModal').classList.remove('hidden');
+        }
+
+        function closeUploadModal() {
+            document.getElementById('uploadModal').classList.add('hidden');
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                document.getElementById('fileNameDisplay').textContent = `Terpilih: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+                
+                const sizeKB = (file.size / 1024).toFixed(0);
+                document.getElementById('docSize').value = `${sizeKB} KB`;
+
+                const ext = file.name.split('.').pop().toUpperCase();
+                if (['DOCX', 'PDF', 'XLSX'].includes(ext)) {
+                    document.getElementById('docFormat').value = ext;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    selectedFileBase64 = e.target.result.split(',')[1];
+                    selectedFileMeta = {
+                        name: file.name,
+                        type: file.type
+                    };
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            if (!isAdmin) return;
+
+            const submitBtn = document.getElementById('submitBtn');
+            const editId = document.getElementById('editDocId').value;
+            const title = document.getElementById('docTitle').value;
+            const category = document.getElementById('docCategory').value;
+            const format = document.getElementById('docFormat').value;
+            const description = document.getElementById('docDescription').value;
+            const size = document.getElementById('docSize').value || '120 KB';
+            const today = new Date().toISOString().split('T')[0];
+
+            let driveUrl = '';
+
+            if (selectedFileBase64) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Mengunggah ke Drive...';
+                showToast('Mengunggah berkas ke Google Drive...', 'info');
+
+                try {
+                    const response = await fetch(GOOGLE_SCRIPT_URL, {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            fileName: selectedFileMeta.name,
+                            mimeType: selectedFileMeta.type,
+                            fileData: selectedFileBase64,
+                            category: category
+                        })
+                    });
+
+                    const result = await response.json();
+                    if (result.status === 'success') {
+                        driveUrl = result.fileUrl;
+                        showToast('Berkas berhasil disimpan di Google Drive!', 'success');
+                    } else {
+                        showToast('Gagal unggah ke Drive: ' + result.message, 'danger');
+                    }
+                } catch (err) {
+                    console.error(err);
+                    showToast('Terjadi kesalahan koneksi ke Google Drive', 'danger');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Simpan & Unggah ke Drive';
+                }
+            }
+
+            if (editId) {
+                const index = documents.findIndex(d => d.id === editId);
+                if (index !== -1) {
+                    documents[index] = {
+                        ...documents[index],
+                        title,
+                        category,
+                        format,
+                        description,
+                        size,
+                        driveUrl: driveUrl || documents[index].driveUrl,
+                        updatedAt: today
+                    };
+                    showToast('Berkas berhasil diperbarui', 'success');
+                }
+            } else {
+                const newDoc = {
+                    id: 'doc-' + Date.now(),
+                    title,
+                    category,
+                    format,
+                    description,
+                    size,
+                    driveUrl: driveUrl,
+                    updatedAt: today
+                };
+                documents.unshift(newDoc);
+                showToast('Berkas baru berhasil ditambahkan', 'success');
+            }
+
+            saveToLocalStorage();
+            renderDocuments();
+            closeUploadModal();
+        }
+
+        function editDocument(id) {
+            if (!isAdmin) return;
+            const doc = documents.find(d => d.id === id);
+            if (!doc) return;
+
+            document.getElementById('modalTitle').textContent = 'Ubah Informasi Berkas';
+            document.getElementById('editDocId').value = doc.id;
+            document.getElementById('docTitle').value = doc.title;
+            document.getElementById('docCategory').value = doc.category;
+            document.getElementById('docFormat').value = doc.format;
+            document.getElementById('docDescription').value = doc.description || '';
+            document.getElementById('docSize').value = doc.size || '';
+
+            document.getElementById('uploadModal').classList.remove('hidden');
+        }
+
+        function deleteDocument(id) {
+            if (!isAdmin) return;
+            if (confirm('Apakah Anda yakin ingin menghapus berkas dokumen ini?')) {
+                documents = documents.filter(d => d.id !== id);
+                saveToLocalStorage();
+                renderDocuments();
+                showToast('Berkas berhasil dihapus', 'danger');
+            }
+        }
+
+        function downloadFile(title, format, driveUrl) {
+            if (driveUrl) {
+                showToast('Membuka tautan berkas di Google Drive...', 'info');
+                window.open(driveUrl, '_blank');
+                return;
+            }
+
+            showToast(`Mengunduh berkas: ${title}.${format.toLowerCase()}...`, 'info');
+
+            const content = `UNIVERSITAS SUMATERA UTARA
+FAKULTAS PERTANIAN - PROGRAM STUDI AGRIBISNIS
+
+========================================================================
+TEMPLATE RESMI: ${title.toUpperCase()}
+========================================================================
+
+Kepada Yth.
+Bapak/Ibu Dosen Penguji / Pembimbing
+di Tempat
+
+Dengan hormat,
+Melalui surat ini kami sampaikan berkas administrasi dan lembar konfirmasi pelaksanaan kegiatan akademik untuk mahasiswa terlampir.
+
+Terima kasih.
+Subbag Akademik & Kemahasiswaan Agribisnis USU.
+`;
+
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const filename = `${title.replace(/[^a-zA-Z0-9]/g, '_')}_Template.${format.toLowerCase()}`;
+
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+
+            let bgClass = 'bg-usu-dark text-white border border-emerald-700';
+            if (type === 'success') bgClass = 'bg-emerald-700 text-white';
+            if (type === 'danger') bgClass = 'bg-rose-700 text-white';
+            if (type === 'info') bgClass = 'bg-usu-main text-white';
+
+            toast.className = `pointer-events-auto px-4 py-3 rounded-xl shadow-xl text-xs sm:text-sm font-semibold flex items-center space-x-2 transition-all transform translate-y-2 opacity-0 ${bgClass}`;
+            toast.innerHTML = `
+                <svg class="w-4 h-4 flex-shrink-0 text-usu-yellow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span>${escapeHtml(message)}</span>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.innerText = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
