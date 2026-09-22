@@ -277,8 +277,19 @@
         async function fetchDocumentsOnline() {
             const loading = document.getElementById('loadingState');
             const grid = document.getElementById('documentGrid');
+            loading.classList.remove('hidden');
+
             try {
-                const response = await fetch(GOOGLE_SCRIPT_URL);
+                // Menggunakan redirect follow untuk menangani respon dari Apps Script
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'GET',
+                    redirect: 'follow'
+                });
+                
+                if (!response.ok) {
+                    throw new Error("HTTP error " + response.status);
+                }
+
                 const data = await response.json();
                 documents = Array.isArray(data) ? data : [];
             } catch (e) {
@@ -468,15 +479,27 @@
             };
 
             try {
-                await fetch(GOOGLE_SCRIPT_URL, {
+                // Mengirim payload dengan format text/plain agar tidak memicu CORS Preflight Error di Google Apps Script
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8'
+                    },
                     body: JSON.stringify(payload)
                 });
-                showToast('Berkas berhasil disimpan!', 'success');
-                closeUploadModal();
-                fetchDocumentsOnline();
+
+                const resData = await response.json();
+
+                if (resData.status === 'success') {
+                    showToast('Berkas berhasil disimpan!', 'success');
+                    closeUploadModal();
+                    fetchDocumentsOnline();
+                } else {
+                    showToast('Gagal: ' + (resData.message || 'Error tidak diketahui'), 'danger');
+                }
             } catch (err) {
-                showToast('Gagal mengunggah berkas', 'danger');
+                console.error("Upload error:", err);
+                showToast('Gagal mengunggah berkas. Periksa jaringan Anda.', 'danger');
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Simpan & Unggah';
